@@ -32,16 +32,19 @@ suite('vscode API - webview', () => {
 	});
 
 	test('webviews should be able to send and receive messages', async () => {
+		console.log('Creating webview');
 		const webview = _register(vscode.window.createWebviewPanel(webviewId, 'title', { viewColumn: vscode.ViewColumn.One }, { enableScripts: true }));
 		const firstResponse = getMessage(webview);
 		webview.webview.html = createHtmlDocumentWithBody(/*html*/`
 			<script>
+				console.log('Inside webview');
 				const vscode = acquireVsCodeApi();
 				window.addEventListener('message', (message) => {
 					vscode.postMessage({ value: message.data.value + 1 });
 				});
 			</script>`);
 
+		console.log('Posting');
 		webview.webview.postMessage({ value: 1 });
 		assert.strictEqual((await firstResponse).value, 2);
 	});
