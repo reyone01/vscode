@@ -56,7 +56,6 @@ import { generateTokensCSSForColorMap } from 'vs/editor/common/modes/supports/to
 import { ResourceMap } from 'vs/base/common/map';
 import { IFileService } from 'vs/platform/files/common/files';
 import { joinPath } from 'vs/base/common/resources';
-import { IWorkbenchEnvironmentService } from 'vs/workbench/services/environment/common/environmentService';
 import { INotificationService } from 'vs/platform/notification/common/notification';
 import { asWebviewUri } from 'vs/workbench/api/common/shared/webview';
 
@@ -131,7 +130,6 @@ export class GettingStartedPage extends EditorPane {
 		@IExtensionService private readonly extensionService: IExtensionService,
 		@IInstantiationService private readonly instantiationService: IInstantiationService,
 		@INotificationService private readonly notificationService: INotificationService,
-		@IWorkbenchEnvironmentService private readonly environmentService: IWorkbenchEnvironmentService,
 		@IEditorGroupsService private readonly groupsService: IEditorGroupsService,
 		@IContextKeyService contextService: IContextKeyService,
 		@IQuickInputService private quickInputService: IQuickInputService,
@@ -487,8 +485,6 @@ export class GettingStartedPage extends EditorPane {
 
 			const path = joinPath(base, src);
 			const transformed = asWebviewUri({
-				isExtensionDevelopmentDebug: this.environmentService.isExtensionDevelopment,
-				...this.environmentService,
 				remote: { authority: undefined },
 			}, this.webviewID, path).toString();
 			return `src="${transformed}"`;

@@ -75,8 +75,6 @@ export interface IEnvironment {
 	extensionTestsLocationURI?: URI;
 	globalStorageHome: URI;
 	workspaceStorageHome: URI;
-	webviewResourceRoot: string;
-	webviewCspSource: string;
 	useHostProxy?: boolean;
 }
 
