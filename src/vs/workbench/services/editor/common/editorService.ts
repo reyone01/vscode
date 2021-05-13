@@ -219,6 +219,8 @@ export interface IEditorService {
 	 */
 	isOpened(editor: IResourceEditorInputIdentifier): boolean;
 
+	isOpen(editor: IResourceEditorInput): boolean;
+
 	/**
 	 * This method will return an entry for each editor that reports
 	 * a `resource` that matches the provided one in the group or

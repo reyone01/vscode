@@ -854,6 +854,10 @@ export class EditorService extends Disposable implements EditorServiceImpl {
 		});
 	}
 
+	isOpen(editor: IResourceEditorInput): boolean {
+		return this.editorsObserver.hasEditors(this.asCanonicalEditorResource(editor.resource));
+	}
+
 	//#endregion
 
 	//#region findEditors()
@@ -1385,6 +1389,7 @@ export class DelegatingEditorService implements IEditorService {
 	}
 
 	isOpened(editor: IResourceEditorInputIdentifier): boolean { return this.editorService.isOpened(editor); }
+	isOpen(editor: IResourceEditorInput): boolean { return this.editorService.isOpen(editor); }
 
 	findEditors(resource: URI): readonly IEditorIdentifier[];
 	findEditors(resource: IResourceEditorInputIdentifier): readonly IEditorIdentifier[];
