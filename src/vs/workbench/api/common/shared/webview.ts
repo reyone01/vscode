@@ -32,20 +32,25 @@ export const webviewGenericCspSource = 'https://*.vscode-webview-test.com';
  * ```txt
  * scheme/resource-authority/path...
  * ```
+ *
+ * @param uuid Unique id of the webview.
+ * @param resource Uri of the resource to load.
+ * @param fromUri Optional uri that specifies where `resource` should be resolved from. This
+ *   is needed when loading resources from a remote extension.
  */
 export function asWebviewUri(
-	initData: WebviewInitData,
 	uuid: string,
 	resource: vscode.Uri,
+	fromUri: URI | undefined
 ): vscode.Uri {
 	if (resource.scheme === Schemas.http || resource.scheme === Schemas.https) {
 		return resource;
 	}
 
-	if (initData.remote.authority && resource.scheme === Schemas.file) {
+	if (fromUri?.scheme === Schemas.vscodeRemote && resource.scheme === Schemas.file) {
 		resource = URI.from({
 			scheme: Schemas.vscodeRemote,
-			authority: initData.remote.authority,
+			authority: fromUri.authority,
 			path: resource.path,
 		});
 	}

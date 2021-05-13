@@ -10,7 +10,6 @@ import { streamToBuffer } from 'vs/base/common/buffer';
 import { CancellationTokenSource } from 'vs/base/common/cancellation';
 import { Emitter } from 'vs/base/common/event';
 import { Disposable, IDisposable } from 'vs/base/common/lifecycle';
-import { Schemas } from 'vs/base/common/network';
 import { URI } from 'vs/base/common/uri';
 import { localize } from 'vs/nls';
 import { createAndFillInContextMenuActions } from 'vs/platform/actions/browser/menuEntryActionViewItem';
@@ -379,17 +378,13 @@ export abstract class BaseWebview<T extends HTMLElement> extends Disposable {
 	}
 
 	private rewriteVsCodeResourceUrls(value: string): string {
-		const remoteAuthority = this.extension?.location.scheme === Schemas.vscodeRemote ? this.extension.location.authority : undefined;
-		const asUriContext = {
-			remote: { authority: remoteAuthority },
-		};
 		return value
 			.replace(/(["'])(?:vscode-resource):(\/\/([^\s\/'"]+?)(?=\/))?([^\s'"]+?)(["'])/gi, (_match, startQuote, _1, scheme, path, endQuote) => {
 				const uri = URI.from({
 					scheme: scheme || 'file',
 					path: path,
 				});
-				const webviewUri = asWebviewUri(asUriContext, this.id, uri).toString();
+				const webviewUri = asWebviewUri(this.id, uri, this.extension?.location).toString();
 				return `${startQuote}${webviewUri}${endQuote}`;
 			})
 			.replace(/(["'])(?:vscode-webview-resource):(\/\/[^\s\/'"]+\/([^\s\/'"]+?)(?=\/))?([^\s'"]+?)(["'])/gi, (_match, startQuote, _1, scheme, path, endQuote) => {
@@ -397,7 +392,7 @@ export abstract class BaseWebview<T extends HTMLElement> extends Disposable {
 					scheme: scheme || 'file',
 					path: path,
 				});
-				const webviewUri = asWebviewUri(asUriContext, this.id, uri).toString();
+				const webviewUri = asWebviewUri(this.id, uri, this.extension?.location).toString();
 				return `${startQuote}${webviewUri}${endQuote}`;
 			});
 	}

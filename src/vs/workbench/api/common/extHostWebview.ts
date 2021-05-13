@@ -22,7 +22,6 @@ export class ExtHostWebview implements vscode.Webview {
 	readonly #proxy: extHostProtocol.MainThreadWebviewsShape;
 	readonly #deprecationService: IExtHostApiDeprecationService;
 
-	readonly #initData: WebviewInitData;
 	readonly #workspace: IExtHostWorkspace | undefined;
 	readonly #extension: IExtensionDescription;
 
@@ -45,7 +44,6 @@ export class ExtHostWebview implements vscode.Webview {
 		this.#handle = handle;
 		this.#proxy = proxy;
 		this.#options = options;
-		this.#initData = initData;
 		this.#workspace = workspace;
 		this.#extension = extension;
 		this.#serializeBuffersForPostMessage = shouldSerializeBuffersForPostMessage(extension);
@@ -69,7 +67,7 @@ export class ExtHostWebview implements vscode.Webview {
 
 	public asWebviewUri(resource: vscode.Uri): vscode.Uri {
 		this.#hasCalledAsWebviewUri = true;
-		return asWebviewUri(this.#initData, this.#handle, resource);
+		return asWebviewUri(this.#handle, resource, this.#extension.extensionLocation);
 	}
 
 	public get cspSource(): string {

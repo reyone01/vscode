@@ -11,7 +11,6 @@ import { ExtHostNotebookController } from 'vs/workbench/api/common/extHostNotebo
 import { ExtensionIdentifier, IExtensionDescription } from 'vs/platform/extensions/common/extensions';
 import { URI, UriComponents } from 'vs/base/common/uri';
 import * as extHostTypeConverters from 'vs/workbench/api/common/extHostTypeConverters';
-import { IExtHostInitDataService } from 'vs/workbench/api/common/extHostInitDataService';
 import { asWebviewUri } from 'vs/workbench/api/common/shared/webview';
 import { ResourceMap } from 'vs/base/common/map';
 import { timeout } from 'vs/base/common/async';
@@ -39,7 +38,6 @@ export class ExtHostNotebookKernels implements ExtHostNotebookKernelsShape {
 
 	constructor(
 		private readonly _mainContext: IMainContext,
-		private readonly _initData: IExtHostInitDataService,
 		private readonly _extHostNotebook: ExtHostNotebookController
 	) {
 		this._proxy = _mainContext.getProxy(MainContext.MainThreadNotebookKernels);
@@ -184,7 +182,7 @@ export class ExtHostNotebookKernels implements ExtHostNotebookKernelsShape {
 				return that._proxy.$postMessage(handle, editor && that._extHostNotebook.getIdByEditor(editor), message);
 			},
 			asWebviewUri(uri: URI) {
-				return asWebviewUri({ ...that._initData.environment, remote: that._initData.remote }, String(handle), uri);
+				return asWebviewUri(String(handle), uri, extension.extensionLocation);
 			},
 			// --- priority
 			updateNotebookAffinity(notebook, priority) {
